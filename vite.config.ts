@@ -7,14 +7,6 @@ export default defineConfig({
   base: process.env.NODE_ENV === "production" ? "/headcount/" : "/",
   plugins: [react() as never, tailwindcss() as never],
   resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
-  build: {
-    rollupOptions: {
-      input: {
-        landing: path.resolve(__dirname, "index.html"),
-        app: path.resolve(__dirname, "app/index.html"),
-      },
-    },
-  },
   test: {
     globals: true,
     environment: "jsdom",

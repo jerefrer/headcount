@@ -71,7 +71,7 @@ export function ResultsView({ stats, readOnly, onStartOver, onDownload, onShare 
 
       <footer className="mt-8 flex justify-center">
         {readOnly ? (
-          <a href={typeof window !== "undefined" ? window.location.pathname : "/app/"} className="text-sm text-primary hover:underline">
+          <a href={import.meta.env.BASE_URL} className="text-sm text-primary hover:underline">
             {strings.results.createOwn}
           </a>
         ) : (

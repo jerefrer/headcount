@@ -7,7 +7,7 @@ const DAY1 = path.join(dir, "fixtures/day1.csv"); // 05/12/2026 → Day 1
 const DAY2 = path.join(dir, "fixtures/day2.csv"); // 05/13/2026 → Day 2
 
 async function uploadAndReachGrouping(page: Page) {
-  await page.goto("/app/");
+  await page.goto("/");
   await page.locator('input[type="file"]').setInputFiles([DAY1, DAY2]);
   await expect(page.getByText("day1.csv")).toBeVisible();
   await expect(page.getByText("day2.csv")).toBeVisible();

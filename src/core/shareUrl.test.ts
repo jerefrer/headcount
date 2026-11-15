@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { encodeReport, decodeReport, isShareableReport } from "./shareUrl";
+import { buildShareUrl, encodeReport, decodeReport, isShareableReport } from "./shareUrl";
 import type { ShareableReport } from "./types";
 
 const sample: ShareableReport = {
@@ -42,5 +42,13 @@ describe("shareUrl encode/decode", () => {
   it("isShareableReport recognises the right shape", () => {
     expect(isShareableReport(sample)).toBe(true);
     expect(isShareableReport({ v: 1, title: "" } as unknown)).toBe(false);
+  });
+});
+
+describe("buildShareUrl", () => {
+  it("should point at the site root and carry the encoded report in the hash", () => {
+    const url = buildShareUrl("https://jerefrer.github.io", "/headcount/", encodeReport(sample));
+    expect(url.startsWith("https://jerefrer.github.io/headcount/#report=")).toBe(true);
+    expect(decodeReport(url.slice(url.indexOf("#report=") + "#report=".length))).toEqual(sample);
   });
 });

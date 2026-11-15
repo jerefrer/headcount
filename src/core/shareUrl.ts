@@ -60,3 +60,12 @@ export function toShareable(stats: AggregateStats): ShareableReport {
     peak: stats.peak,
   };
 }
+
+/**
+ * Build the public share link. Always points at the site root (`base`, e.g.
+ * "/headcount/"), never at the current path, so links stay stable even when the
+ * page was opened through a legacy URL.
+ */
+export function buildShareUrl(origin: string, base: string, encoded: string): string {
+  return `${origin}${base}#report=${encoded}`;
+}
