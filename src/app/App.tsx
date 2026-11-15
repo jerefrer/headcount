@@ -20,9 +20,13 @@ import { SiteFooter } from "@/features/landing/SiteFooter";
 
 function BrandMark() {
   return (
-    <div aria-hidden="true" className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/25">
-      <span className="block h-3 w-3 rounded-full bg-primary-foreground/95 ring-4 ring-primary-foreground/20" />
-    </div>
+    <img
+      src={`${import.meta.env.BASE_URL}favicon.svg`}
+      alt=""
+      width={56}
+      height={56}
+      className="mx-auto mb-5 block h-14 w-14 drop-shadow-lg"
+    />
   );
 }
 
