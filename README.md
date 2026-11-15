@@ -9,7 +9,7 @@ and engagement insights.
 **Your data never leaves your browser.** No upload, no database, no logging.
 The optional share link contains only aggregated stats — no emails or names.
 
-➡️ **Live**: https://jerefrer.github.io/headcount/
+➡️ **Live**: https://jerefrer.github.io/headcount/ (the tool is the home page; try the built-in sample data to see a report instantly)
 
 ## Features
 
@@ -20,6 +20,9 @@ The optional share link contains only aggregated stats — no emails or names.
 - Rich in-app dashboard: KPI cards, country breakdown, per-day chart,
   engagement histogram, retention curve, peak concurrent viewers
 - Shareable URL with aggregated stats only (RGPD-clean)
+- One-click sample data (synthetic CSVs in `public/sample/`)
+
+The legacy `/app/` URL redirects to the root, preserving the `#report=` share hash.
 
 ## Development
 
