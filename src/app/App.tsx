@@ -148,11 +148,13 @@ export default function App() {
           onDownload={() => {}}
           onShare={() => {}}
         />
+        <SiteFooter />
       </main>
     );
   }
 
-  // The marketing sections only show before any file is loaded or report built.
+  // The explanatory sections only show before any file is loaded or report
+  // built; the footer (author, sponsor, source) always shows.
   const isEmpty = !stats && w.files.length === 0;
 
   return (
@@ -196,9 +198,10 @@ export default function App() {
           <WhatYouGet />
           <Privacy />
           <Faq />
-          <SiteFooter />
         </>
       )}
+
+      <SiteFooter />
 
       {toast && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-foreground px-4 py-2 text-sm text-background shadow-lg">

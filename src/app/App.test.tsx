@@ -60,7 +60,8 @@ describe("App", () => {
       expect(screen.getByText(strings.results.topLine.unique)).toBeInTheDocument();
       expect(screen.queryByRole("heading", { name: strings.exportGuide.heading })).not.toBeInTheDocument();
       expect(screen.queryByRole("heading", { name: strings.faq.heading })).not.toBeInTheDocument();
-      expect(screen.queryByText(strings.footer.legal)).not.toBeInTheDocument();
+      // The footer (author, sponsor, source) stays visible with a report.
+      expect(screen.getByText(strings.footer.legal)).toBeInTheDocument();
     });
 
     it("shows an error and keeps the empty state when the sample cannot be fetched", async () => {
