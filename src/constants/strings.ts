@@ -1,7 +1,7 @@
 export const strings = {
-  appTitle: "Zoom Webinar Report",
-  appTitleBrand: "Zoom",
-  appTitleRest: "Webinar Report",
+  appTitle: "Headcount",
+  appTitleBrand: "Headcount",
+  appTitleRest: "for Zoom webinars",
   appSubtitle: "Free in-browser tool for deduplicated attendee reports — your data never leaves your browser.",
   steps: { upload: "Upload", grouping: "Group by day", options: "Options", done: "Download" },
   upload: {

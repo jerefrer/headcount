@@ -1,14 +1,14 @@
 {
-  "name": "zoom-webinar-report",
+  "name": "headcount",
   "private": false,
   "version": "0.1.0",
   "type": "module",
   "description": "Free in-browser tool for deduplicated Zoom attendee reports. Multi-day, multi-room, country breakdowns, engagement insights — all client-side, RGPD-friendly.",
   "license": "MIT",
-  "homepage": "https://github.com/jerefrer/zoom-webinar-report",
+  "homepage": "https://github.com/jerefrer/headcount",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jerefrer/zoom-webinar-report.git"
+    "url": "git+https://github.com/jerefrer/headcount.git"
   },
   "scripts": {
     "dev": "vite",

@@ -1,4 +1,6 @@
-# Zoom Webinar Report
+# Headcount
+
+**for Zoom webinars**
 
 Free in-browser tool that turns Zoom attendee CSV reports into clean XLSX reports
 with deduplicated rejoins, multi-day & multi-room support, country breakdowns,
@@ -7,7 +9,7 @@ and engagement insights.
 **Your data never leaves your browser.** No upload, no database, no logging.
 The optional share link contains only aggregated stats — no emails or names.
 
-➡️ **Live**: https://jerefrer.github.io/zoom-webinar-report/
+➡️ **Live**: https://jerefrer.github.io/headcount/
 
 ## Features
 
@@ -51,5 +53,4 @@ MIT — see [LICENSE](./LICENSE).
 
 ## Disclaimer
 
-Independent project. Not affiliated with or endorsed by Zoom Video
-Communications, Inc. Zoom® is a trademark of Zoom Video Communications, Inc.
+Not affiliated with or endorsed by Zoom. Zoom is a trademark of Zoom Communications, Inc.

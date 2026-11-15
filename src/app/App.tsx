@@ -103,7 +103,7 @@ export default function App() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${(stats.title || "zoom-webinar-report").replace(/[^a-z0-9-_]+/gi, "_")}.xlsx`;
+    a.download = `${(stats.title || "headcount-report").replace(/[^a-z0-9-_]+/gi, "_")}.xlsx`;
     a.click();
     URL.revokeObjectURL(url);
   }, [stats, combined]);

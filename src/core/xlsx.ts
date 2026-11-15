@@ -161,7 +161,7 @@ function buildSummary(stats: AggregateStats): XLSX.WorkSheet {
   let r = 0;
 
   // Title (merged A1:G1) — bandeau Zoom-blue
-  setCell(ws, r, 0, stats.title || "Zoom Webinar Report", styleTitle());
+  setCell(ws, r, 0, stats.title || "Headcount report", styleTitle());
   fillMergeRange(ws, r, 0, NCOLS - 1, styleTitle());
   merges.push({ s: { r, c: 0 }, e: { r, c: NCOLS - 1 } });
   heights.set(r, 56);
