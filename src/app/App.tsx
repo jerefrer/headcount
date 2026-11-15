@@ -8,13 +8,15 @@ import { GroupingStep } from "@/features/wizard/GroupingStep";
 import { OptionsStep } from "@/features/wizard/OptionsStep";
 import { WizardStepper } from "@/features/wizard/WizardStepper";
 import { ResultsView } from "@/features/results/ResultsView";
-import { parseZoomCsvBuffer } from "@/core/parser";
-import { deduplicate } from "@/core/processor";
-import { aggregate, combinedFor } from "@/core/aggregator";
 import { buildXlsx } from "@/core/xlsx";
-import { encodeReport, toShareable } from "@/core/shareUrl";
+import { buildShareUrl, encodeReport, toShareable } from "@/core/shareUrl";
 import type { AttendeeRow } from "@/core/types";
-import type { AggregateStats, ProcessedSource, ShareableReport } from "@/types/report";
+import type { AggregateStats, ShareableReport } from "@/types/report";
+import { generateReport } from "@/lib/generateReport";
+import { groupByDate } from "@/lib/grouping";
+import { SampleDataButton } from "@/features/landing/SampleDataButton";
+import { ExportGuide, Faq, Privacy, WhatYouGet } from "@/features/landing/IntroSections";
+import { SiteFooter } from "@/features/landing/SiteFooter";
 
 function BrandMark() {
   return (
@@ -48,13 +50,7 @@ function statsFromShared(s: ShareableReport): AggregateStats {
   };
 }
 
-function deriveRoomLabel(filename: string): string {
-  const stem = filename.replace(/\.[^.]+$/, "");
-  const low = stem.toLowerCase();
-  if (low.includes("main")) return "Main Room";
-  if (low.includes("chinese")) return "Chinese Room";
-  return stem;
-}
+const SAMPLE_FILES = ["sample-day-1.csv", "sample-day-2.csv"];
 
 export default function App() {
   const shared = useSharedReport();
@@ -62,6 +58,8 @@ export default function App() {
   const [stats, setStats] = useState<AggregateStats | null>(null);
   const [combined, setCombined] = useState<AttendeeRow[] | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [sampleLoading, setSampleLoading] = useState(false);
+  const [sampleError, setSampleError] = useState(false);
 
   const handleFiles = useCallback(async (files: File[]) => {
     const merged = [...w.files.filter((f) => !files.some((n) => n.name === f.name)), ...files];
@@ -71,30 +69,44 @@ export default function App() {
   }, [w]);
 
   const runGenerate = useCallback(async () => {
-    const filesByName = new Map(w.files.map((f) => [f.name, f]));
-    const days: { sources: ProcessedSource[] }[] = [];
-    for (let di = 0; di < w.grouping.days.length; di++) {
-      const filenames = w.grouping.days[di];
-      const sources: ProcessedSource[] = [];
-      for (let si = 0; si < filenames.length; si++) {
-        const f = filesByName.get(filenames[si]);
-        if (!f) continue;
-        const buf = await f.arrayBuffer();
-        const parsed = parseZoomCsvBuffer(buf);
-        sources.push({
-          attendees: deduplicate(parsed.attendees),
-          meta: parsed.meta,
-          roomLabel: filenames.length === 1 ? "Main Room" : deriveRoomLabel(filenames[si]),
-        });
-      }
-      if (sources.length > 0) days.push({ sources });
-    }
     const config = w.buildConfig();
-    const input = { title: config.topic, thresholds: config.thresholds, days };
-    const a = aggregate(input);
-    setStats(a);
-    setCombined(combinedFor(input));
+    const report = await generateReport({
+      files: w.files,
+      days: w.grouping.days,
+      title: config.topic,
+      thresholds: config.thresholds,
+    });
+    setStats(report.stats);
+    setCombined(report.combined);
     w.goToResults();
+  }, [w]);
+
+  const loadSample = useCallback(async () => {
+    setSampleLoading(true);
+    setSampleError(false);
+    try {
+      const files = await Promise.all(
+        SAMPLE_FILES.map(async (name) => {
+          const res = await fetch(`${import.meta.env.BASE_URL}sample/${name}`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return new File([await res.arrayBuffer()], name, { type: "text/csv" });
+        }),
+      );
+      const grouping = groupByDate(await inspectFilesLocal(files));
+      const report = await generateReport({
+        files,
+        days: grouping.days,
+        title: strings.sample.title,
+        thresholds: [40, 60],
+      });
+      setStats(report.stats);
+      setCombined(report.combined);
+      w.goToResults();
+    } catch {
+      setSampleError(true);
+    } finally {
+      setSampleLoading(false);
+    }
   }, [w]);
 
   const handleDownload = useCallback(() => {
@@ -110,7 +122,7 @@ export default function App() {
 
   const handleShare = useCallback(async () => {
     if (!stats) return;
-    const url = `${window.location.origin}${window.location.pathname}#report=${encodeReport(toShareable(stats))}`;
+    const url = buildShareUrl(window.location.origin, import.meta.env.BASE_URL, encodeReport(toShareable(stats)));
     await navigator.clipboard.writeText(url);
     setToast(strings.results.shareCopied);
     setTimeout(() => setToast(null), 3000);
@@ -139,6 +151,9 @@ export default function App() {
       </main>
     );
   }
+
+  // The marketing sections only show before any file is loaded or report built.
+  const isEmpty = !stats && w.files.length === 0;
 
   return (
     <main className="relative min-h-screen bg-background px-4 py-12 sm:py-16">
@@ -172,6 +187,17 @@ export default function App() {
             <OptionsStep topic={w.options.topic} thresholds={w.options.thresholds} onTopic={w.setTopic} onAddThreshold={w.addThreshold} onRemoveThreshold={w.removeThreshold} onBack={w.goToGrouping} onGenerate={runGenerate} />
           )}
         </Card>
+      )}
+
+      {isEmpty && (
+        <>
+          <SampleDataButton loading={sampleLoading} error={sampleError} onClick={loadSample} />
+          <ExportGuide />
+          <WhatYouGet />
+          <Privacy />
+          <Faq />
+          <SiteFooter />
+        </>
       )}
 
       {toast && (

@@ -45,12 +45,17 @@ export function Dropzone({ onFiles }: Props) {
       role="button"
       tabIndex={0}
       onClick={() => inputRef.current?.click()}
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && inputRef.current?.click()}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          inputRef.current?.click();
+        }
+      }}
       onDragOver={(e) => { e.preventDefault(); setOver(true); }}
       onDragLeave={() => setOver(false)}
       onDrop={(e) => { e.preventDefault(); setOver(false); pick(e.dataTransfer.files); }}
       className={[
-        "group flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-12 text-center transition-all",
+        "group flex cursor-pointer outline-none focus-visible:border-primary focus-visible:ring-4 focus-visible:ring-primary/30 flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 sm:p-12 text-center transition-all",
         over
           ? "border-primary bg-primary/5"
           : "border-border bg-muted/40 hover:border-primary/60 hover:bg-primary/3",
