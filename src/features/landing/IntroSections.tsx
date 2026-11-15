@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Card } from "@/components/ui/card";
 import { strings } from "@/constants/strings";
+import { RichText } from "@/features/landing/RichText";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
@@ -21,7 +22,7 @@ export function ExportGuide() {
           <li key={s.title} className="rounded-2xl border border-border/70 bg-card p-5">
             <span aria-hidden="true" className="mb-3 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">{i + 1}</span>
             <h3 className="font-medium text-foreground">{s.title}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{s.body}</p>
+            <p className="mt-1 text-sm text-muted-foreground"><RichText text={s.body} /></p>
           </li>
         ))}
       </ol>
@@ -67,33 +68,33 @@ export function Privacy() {
 }
 
 export function Faq() {
+  const items = strings.faq.items;
   return (
     <Section id="faq" heading={strings.faq.heading}>
-      <dl className="space-y-5">
-        {strings.faq.items.map((item) => {
-          const [before, after] = item.a.split("{link}");
-          return (
-            <div key={item.q}>
-              <dt className="font-medium text-foreground">{item.q}</dt>
-              <dd className="mt-1 text-muted-foreground">
-                {after === undefined ? item.a : (
-                  <>
-                    {before}
-                    <a
-                      href="https://github.com/jerefrer/headcount"
-                      target="_blank"
-                      rel="noopener"
-                      className="rounded-sm text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                    >
-                      {strings.faq.sourceLinkLabel}
-                    </a>
-                    {after}
-                  </>
-                )}
-              </dd>
-            </div>
-          );
-        })}
+      <dl className="grid gap-4 sm:grid-cols-2">
+        {items.map((item, i) => (
+          <div
+            key={item.q}
+            className={`rounded-2xl border border-border/70 bg-card p-5 ${i === items.length - 1 && items.length % 2 === 1 ? "sm:col-span-2" : ""}`}
+          >
+            <dt className="font-medium text-foreground">{item.q}</dt>
+            <dd className="mt-1 text-sm text-muted-foreground">
+              <RichText
+                text={item.a}
+                link={
+                  <a
+                    href="https://github.com/jerefrer/headcount"
+                    target="_blank"
+                    rel="noopener"
+                    className="rounded-sm text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    {strings.faq.sourceLinkLabel}
+                  </a>
+                }
+              />
+            </dd>
+          </div>
+        ))}
       </dl>
     </Section>
   );

@@ -13,9 +13,9 @@ export const strings = {
   exportGuide: {
     heading: "How to export the CSV from Zoom",
     steps: [
-      { title: "Open the Zoom web portal", body: "Sign in at zoom.us with an account that hosted the webinar and open Reports in the left menu." },
-      { title: "Pick the attendee report", body: "Go to Usage Reports → Webinar, choose the Attendee Report type, set the date range and click Search, then Generate for your webinar." },
-      { title: "Export as CSV", body: "Click Export as CSV. Repeat for each day (and each interpretation room), then drop all the files above." },
+      { title: "Open the Zoom web portal", body: "Sign in at **zoom.us** with an account that hosted the webinar and open **Reports** in the left menu." },
+      { title: "Pick the attendee report", body: "Go to **Usage Reports → Webinar**, choose the **Attendee Report** type, set the date range and click **Search**, then **Generate** for your webinar." },
+      { title: "Export as CSV", body: "Click **Export as CSV**. Repeat for **each day (and each interpretation room)**, then **drop all the files above**." },
     ],
   },
   whatYouGet: {
@@ -43,13 +43,13 @@ export const strings = {
     heading: "Questions",
     sourceLinkLabel: "on GitHub",
     items: [
-      { q: "Does my data ever leave my browser?", a: "No. The CSV is parsed, deduped, and aggregated entirely in JavaScript on your machine. Only the static page assets are loaded from GitHub Pages." },
-      { q: "Does it need a paid Zoom plan?", a: "Only the CSV export feature in Zoom is needed (available on most paid plans). No API integration, no OAuth." },
-      { q: "Does it work offline?", a: "Once the page is loaded, yes — the processing runs locally. You can refresh while offline as long as the browser cached the assets." },
-      { q: "Is the share link safe to send around?", a: "Yes. The URL fragment contains only aggregated stats (country counts, threshold counts, histogram buckets, etc.) — no emails, names, or individual timestamps." },
-      { q: "What file format does Zoom export?", a: 'The "Attendee Report" CSV from Reports → Usage Reports. UTF-8 with a BOM is supported.' },
-      { q: "Does it support multiple interpretation rooms?", a: "Yes. Drop both the Main and Chinese (or any interpretation) CSVs together — files are auto-ordered Main → Chinese in the report." },
-      { q: "Is the source open?", a: "Yes — {link} (MIT licensed)." },
+      { q: "Does my data ever leave my browser?", a: "**No.** The CSV is parsed, deduped, and aggregated **entirely in JavaScript on your machine**. Only the static page assets are loaded from GitHub Pages." },
+      { q: "Does it need a paid Zoom plan?", a: "Only the CSV export feature in Zoom is needed (available on **most paid plans**). **No API integration, no OAuth.**" },
+      { q: "Does it work offline?", a: "Once the page is loaded, **yes** — the processing runs locally. You can refresh while offline as long as the browser cached the assets." },
+      { q: "Is the share link safe to send around?", a: "**Yes.** The URL fragment contains **only aggregated stats** (country counts, threshold counts, histogram buckets, etc.) — **no emails, names, or individual timestamps**." },
+      { q: "What file format does Zoom export?", a: 'The **"Attendee Report" CSV** from Reports → Usage Reports. **UTF-8 with a BOM** is supported.' },
+      { q: "Does it support multiple interpretation rooms?", a: "**Yes.** Drop both the Main and Chinese (or any interpretation) CSVs together — files are **auto-ordered** Main → Chinese in the report." },
+      { q: "Is the source open?", a: "**Yes** — {link} (**MIT licensed**)." },
     ],
   },
   footer: {
