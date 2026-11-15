@@ -1,0 +1,81 @@
+﻿Attendee Report
+Report generated time,03/11/2026 10:00:00 AM
+Topic,Webinar ID,Actual Start Time,Actual Duration (minutes),Total Users,Unique Viewers
+Sample Webinar (fake data),000 000 0000,03/10/2026 09:00:00 AM,90,71,60
+Host Details
+Attended,User Name (Original Name),Email,Join Time,Leave Time,Time in Session (minutes),Is Guest,Country/Region Name
+Yes,Sample Host,sample.host@example.com,03/10/2026 09:00:00 AM,03/10/2026 10:30:00 AM,90,No,France
+Panelist Details
+Attended,User Name (Original Name),Email,Join Time,Leave Time,Time in Session (minutes),Is Guest,Country/Region Name
+Yes,Sample Panelist,sample.panelist@example.com,03/10/2026 09:00:00 AM,03/10/2026 10:30:00 AM,90,No,Germany
+Attendee Details
+Attended,User Name (Original Name),Email,Join Time,Leave Time,Time in Session (minutes),Is Guest,Country/Region Name
+Yes,Sample Attendee 001,sample.attendee001@example.com,03/10/2026 09:00:00 AM,03/10/2026 09:21:00 AM,21,Yes,France
+Yes,Sample Attendee 004,sample.attendee004@example.com,03/10/2026 09:00:00 AM,03/10/2026 10:20:00 AM,80,No,Spain
+Yes,Sample Attendee 018,sample.attendee018@example.com,03/10/2026 09:00:00 AM,03/10/2026 09:25:00 AM,25,Yes,United States
+Yes,Sample Attendee 031,sample.attendee031@example.com,03/10/2026 09:00:00 AM,03/10/2026 09:49:00 AM,49,Yes,Brazil
+Yes,Sample Attendee 040,sample.attendee040@example.com,03/10/2026 09:00:00 AM,03/10/2026 10:08:00 AM,68,No,Brazil
+Yes,Sample Attendee 049,sample.attendee049@example.com,03/10/2026 09:00:00 AM,03/10/2026 09:39:00 AM,39,Yes,Germany
+Yes,Sample Attendee 052,sample.attendee052@example.com,03/10/2026 09:00:00 AM,03/10/2026 09:44:00 AM,44,Yes,Canada
+Yes,Sample Attendee 023,sample.attendee023@example.com,03/10/2026 09:01:00 AM,03/10/2026 10:30:00 AM,89,Yes,United Kingdom
+Yes,Sample Attendee 027,sample.attendee027@example.com,03/10/2026 09:01:00 AM,03/10/2026 10:07:00 AM,66,No,Spain
+Yes,Sample Attendee 047,sample.attendee047@example.com,03/10/2026 09:01:00 AM,03/10/2026 09:31:00 AM,30,Yes,Japan
+Yes,Sample Attendee 055,sample.attendee055@example.com,03/10/2026 09:01:00 AM,03/10/2026 09:25:00 AM,24,Yes,United States
+Yes,Sample Attendee 058,sample.attendee058@example.com,03/10/2026 09:01:00 AM,03/10/2026 10:05:00 AM,64,Yes,Japan
+Yes,Sample Attendee 012,sample.attendee012@example.com,03/10/2026 09:02:00 AM,03/10/2026 09:36:00 AM,34,No,Canada
+Yes,Sample Attendee 016,sample.attendee016@example.com,03/10/2026 09:02:00 AM,03/10/2026 10:16:00 AM,74,Yes,United States
+Yes,Sample Attendee 028,sample.attendee028@example.com,03/10/2026 09:02:00 AM,03/10/2026 09:23:00 AM,21,Yes,United Kingdom
+Yes,Sample Attendee 035,sample.attendee035@example.com,03/10/2026 09:02:00 AM,03/10/2026 09:27:00 AM,25,No,Mexico
+Yes,Sample Attendee 045,sample.attendee045@example.com,03/10/2026 09:02:00 AM,03/10/2026 09:26:00 AM,24,No,Spain
+Yes,Sample Attendee 051,sample.attendee051@example.com,03/10/2026 09:02:00 AM,03/10/2026 10:12:00 AM,70,Yes,Nigeria
+Yes,Sample Attendee 008,sample.attendee008@example.com,03/10/2026 09:03:00 AM,03/10/2026 10:05:00 AM,62,No,Canada
+Yes,Sample Attendee 021,sample.attendee021@example.com,03/10/2026 09:03:00 AM,03/10/2026 10:22:00 AM,79,Yes,France
+Yes,Sample Attendee 050,sample.attendee050@example.com,03/10/2026 09:03:00 AM,03/10/2026 09:55:00 AM,52,No,United States
+Yes,Sample Attendee 019,sample.attendee019@example.com,03/10/2026 09:04:00 AM,03/10/2026 09:42:00 AM,38,Yes,France
+Yes,Sample Attendee 014,sample.attendee014@example.com,03/10/2026 09:05:00 AM,03/10/2026 10:07:00 AM,62,Yes,Mexico
+Yes,Sample Attendee 017,sample.attendee017@example.com,03/10/2026 09:05:00 AM,03/10/2026 09:33:00 AM,28,Yes,United Kingdom
+Yes,Sample Attendee 024,sample.attendee024@example.com,03/10/2026 09:05:00 AM,03/10/2026 09:21:00 AM,16,Yes,United States
+Yes,Sample Attendee 032,sample.attendee032@example.com,03/10/2026 09:05:00 AM,03/10/2026 09:37:00 AM,32,Yes,France
+Yes,Sample Attendee 043,sample.attendee043@example.com,03/10/2026 09:05:00 AM,03/10/2026 09:33:00 AM,28,Yes,France
+Yes,Sample Attendee 048,sample.attendee048@example.com,03/10/2026 09:05:00 AM,03/10/2026 09:13:00 AM,8,No,United States
+Yes,Sample Attendee 054,sample.attendee054@example.com,03/10/2026 09:05:00 AM,03/10/2026 09:34:00 AM,29,Yes,France
+Yes,Sample Attendee 020,sample.attendee020@example.com,03/10/2026 09:06:00 AM,03/10/2026 09:43:00 AM,37,No,France
+Yes,Sample Attendee 036,sample.attendee036@example.com,03/10/2026 09:06:00 AM,03/10/2026 09:33:00 AM,27,No,United States
+Yes,Sample Attendee 044,sample.attendee044@example.com,03/10/2026 09:06:00 AM,03/10/2026 10:00:00 AM,54,Yes,United States
+Yes,Sample Attendee 003,sample.attendee003@example.com,03/10/2026 09:07:00 AM,03/10/2026 09:29:00 AM,22,No,Spain
+Yes,Sample Attendee 006,sample.attendee006@example.com,03/10/2026 09:07:00 AM,03/10/2026 10:28:00 AM,81,Yes,United Kingdom
+Yes,Sample Attendee 022,sample.attendee022@example.com,03/10/2026 09:07:00 AM,03/10/2026 10:02:00 AM,55,No,United States
+Yes,Sample Attendee 029,sample.attendee029@example.com,03/10/2026 09:07:00 AM,03/10/2026 09:37:00 AM,30,No,Japan
+Yes,Sample Attendee 038,sample.attendee038@example.com,03/10/2026 09:07:00 AM,03/10/2026 09:32:00 AM,25,No,United Kingdom
+Yes,Sample Attendee 046,sample.attendee046@example.com,03/10/2026 09:07:00 AM,03/10/2026 09:16:00 AM,9,No,France
+Yes,Sample Attendee 002,sample.attendee002@example.com,03/10/2026 09:08:00 AM,03/10/2026 10:12:00 AM,64,No,Spain
+Yes,Sample Attendee 005,sample.attendee005@example.com,03/10/2026 09:08:00 AM,03/10/2026 09:33:00 AM,25,Yes,Germany
+Yes,Sample Attendee 057,sample.attendee057@example.com,03/10/2026 09:08:00 AM,03/10/2026 10:01:00 AM,53,No,Brazil
+Yes,Sample Attendee 011,sample.attendee011@example.com,03/10/2026 09:09:00 AM,03/10/2026 09:43:00 AM,34,Yes,France
+Yes,Sample Attendee 034,sample.attendee034@example.com,03/10/2026 09:09:00 AM,03/10/2026 09:49:00 AM,40,Yes,Germany
+Yes,Sample Attendee 056,sample.attendee056@example.com,03/10/2026 09:09:00 AM,03/10/2026 10:11:00 AM,62,No,Japan
+Yes,Sample Attendee 009,sample.attendee009@example.com,03/10/2026 09:10:00 AM,03/10/2026 09:35:00 AM,25,Yes,India
+Yes,Sample Attendee 013,sample.attendee013@example.com,03/10/2026 09:10:00 AM,03/10/2026 09:19:00 AM,9,Yes,France
+Yes,Sample Attendee 015,sample.attendee015@example.com,03/10/2026 09:10:00 AM,03/10/2026 10:01:00 AM,51,Yes,United States
+Yes,Sample Attendee 025,sample.attendee025@example.com,03/10/2026 09:10:00 AM,03/10/2026 09:21:00 AM,11,Yes,United States
+Yes,Sample Attendee 053,sample.attendee053@example.com,03/10/2026 09:10:00 AM,03/10/2026 09:57:00 AM,47,Yes,United Kingdom
+Yes,Sample Attendee 010,sample.attendee010@example.com,03/10/2026 09:11:00 AM,03/10/2026 09:23:00 AM,12,Yes,Australia
+Yes,Sample Attendee 026,sample.attendee026@example.com,03/10/2026 09:11:00 AM,03/10/2026 09:22:00 AM,11,No,India
+Yes,Sample Attendee 037,sample.attendee037@example.com,03/10/2026 09:11:00 AM,03/10/2026 09:20:00 AM,9,No,United States
+Yes,Sample Attendee 039,sample.attendee039@example.com,03/10/2026 09:11:00 AM,03/10/2026 10:04:00 AM,53,No,United Kingdom
+Yes,Sample Attendee 041,sample.attendee041@example.com,03/10/2026 09:11:00 AM,03/10/2026 09:23:00 AM,12,Yes,Canada
+Yes,Sample Attendee 007,sample.attendee007@example.com,03/10/2026 09:12:00 AM,03/10/2026 10:12:00 AM,60,Yes,United States
+Yes,Sample Attendee 030,sample.attendee030@example.com,03/10/2026 09:12:00 AM,03/10/2026 10:30:00 AM,78,No,Canada
+Yes,Sample Attendee 033,sample.attendee033@example.com,03/10/2026 09:12:00 AM,03/10/2026 09:44:00 AM,32,Yes,Canada
+Yes,Sample Attendee 042,sample.attendee042@example.com,03/10/2026 09:12:00 AM,03/10/2026 10:13:00 AM,61,Yes,Germany
+Yes,Sample Attendee 018,sample.attendee018@example.com,03/10/2026 09:34:00 AM,03/10/2026 09:45:00 AM,11,Yes,United States
+Yes,Sample Attendee 024,sample.attendee024@example.com,03/10/2026 09:35:00 AM,03/10/2026 09:50:00 AM,15,Yes,United States
+Yes,Sample Attendee 043,sample.attendee043@example.com,03/10/2026 09:38:00 AM,03/10/2026 10:08:00 AM,30,No,France
+Yes,Sample Attendee 012,sample.attendee012@example.com,03/10/2026 09:40:00 AM,03/10/2026 10:07:00 AM,27,Yes,Canada
+Yes,Sample Attendee 045,sample.attendee045@example.com,03/10/2026 09:40:00 AM,03/10/2026 10:11:00 AM,31,Yes,Spain
+Yes,Sample Attendee 047,sample.attendee047@example.com,03/10/2026 09:40:00 AM,03/10/2026 10:13:00 AM,33,Yes,Japan
+Yes,Sample Attendee 038,sample.attendee038@example.com,03/10/2026 09:41:00 AM,03/10/2026 10:11:00 AM,30,Yes,United Kingdom
+Yes,Sample Attendee 029,sample.attendee029@example.com,03/10/2026 09:46:00 AM,03/10/2026 09:59:00 AM,13,Yes,Japan
+Yes,Sample Attendee 036,sample.attendee036@example.com,03/10/2026 09:46:00 AM,03/10/2026 09:59:00 AM,13,No,United States
+Yes,Sample Attendee 017,sample.attendee017@example.com,03/10/2026 09:48:00 AM,03/10/2026 10:20:00 AM,32,Yes,United Kingdom
+Yes,Sample Attendee 011,sample.attendee011@example.com,03/10/2026 09:58:00 AM,03/10/2026 10:17:00 AM,19,Yes,France
