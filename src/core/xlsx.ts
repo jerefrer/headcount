@@ -508,10 +508,13 @@ export function buildXlsx(stats: AggregateStats, options: XlsxOptions = {}): Blo
 // sheet could be seen (2026-11-22, a Ukrainian Excel in Protected View). The file
 // had no <bookViews>: SheetJS writes one only when the first sheet is hidden. So
 // the view is added to the written file, with the tabs and scroll bars explicit.
+// No window size: a size larger than the screen opened the workbook as a child
+// window whose bottom (where the tabs are) fell off-screen in Excel 2010. This is
+// the view openpyxl writes, which the earlier Python reports used without trouble.
 const WORKBOOK_VIEW =
-  '<bookViews><workbookView xWindow="0" yWindow="0" windowWidth="28800" windowHeight="15000" ' +
-  'tabRatio="600" showSheetTabs="1" showHorizontalScroll="1" showVerticalScroll="1" ' +
-  'activeTab="0" firstSheet="0"/></bookViews>';
+  '<bookViews><workbookView visibility="visible" minimized="0" showHorizontalScroll="1" ' +
+  'showVerticalScroll="1" showSheetTabs="1" tabRatio="600" firstSheet="0" activeTab="0" ' +
+  'autoFilterDateGrouping="1"/></bookViews>';
 
 function withWorkbookView(ab: ArrayBuffer): Uint8Array<ArrayBuffer> {
   const zip = XLSX.CFB.read(new Uint8Array(ab), { type: "array" });
