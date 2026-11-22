@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { buildShareUrl, encodeReport, decodeReport, isShareableReport } from "./shareUrl";
-import type { ShareableReport } from "./types";
+import { buildShareUrl, encodeReport, decodeReport, isShareableReport, toShareable } from "./shareUrl";
+import type { AggregateStats, ShareableReport } from "./types";
 
 const sample: ShareableReport = {
   v: 1,
@@ -50,5 +50,20 @@ describe("buildShareUrl", () => {
     const url = buildShareUrl("https://jerefrer.github.io", "/headcount/", encodeReport(sample));
     expect(url.startsWith("https://jerefrer.github.io/headcount/#report=")).toBe(true);
     expect(decodeReport(url.slice(url.indexOf("#report=") + "#report=".length))).toEqual(sample);
+  });
+});
+
+describe("per-room aggregates in the share payload", () => {
+  it("should carry counts and countries per room but no topic, name or e-mail", () => {
+    const stats = {
+      title: "E", generatedAt: "", days: [], rooms: [{ dayLabel: "", roomLabel: "Main Room", webinarId: "1", uniqueAttendees: 1, totalUsersZoom: "", uniqueViewersZoom: "", durationMinutesZoom: "" }],
+      topLine: { unique: 1, countries: 1, avg: 1, median: 1, max: 1 }, countries: [], thresholds: [], histogram: [],
+      perRoom: [{ dayLabel: "", roomLabel: "Main Room", webinarId: "1", topic: "Secret topic", unique: 1, countryCount: 1,
+        thresholds: [{ mins: 40, count: 1, pct: 100 }], countries: [{ name: "France", count: 1, pct: 100 }] }],
+    } as AggregateStats;
+    const shared = toShareable(stats);
+    expect(shared.perRoom).toEqual([{ label: "Main Room", webinarId: "1", unique: 1, countryCount: 1,
+      thresholds: [{ mins: 40, count: 1, pct: 100 }], countries: [{ name: "France", count: 1, pct: 100 }] }]);
+    expect(JSON.stringify(shared)).not.toContain("Secret topic");
   });
 });

@@ -183,3 +183,33 @@ describe("aggregate helpers — combinedFor / countriesFilteredBy / perDayCombin
     expect(perDay[1]).toHaveLength(1); // Carol
   });
 });
+
+describe("aggregate — per-room breakdown", () => {
+  const twoRooms = () => aggregate({
+    title: "Event",
+    thresholds: [90],
+    days: [{ sources: [
+      processedSource(DAY1_MAIN_CSV, "Main Room"),
+      processedSource(DAY2_MAIN_CSV, "Chinese Room"),
+    ] }],
+  });
+
+  it("should omit perRoom when there is a single room", () => {
+    const stats = aggregate({ title: "E", thresholds: [90], days: [{ sources: [processedSource(DAY1_MAIN_CSV, "Main Room")] }] });
+    expect(stats.perRoom).toBeUndefined();
+  });
+
+  it("should give each room its own KPIs, thresholds and countries", () => {
+    const { perRoom, topLine } = twoRooms();
+    expect(perRoom).toHaveLength(2);
+    const [main, chinese] = perRoom!;
+    expect(main).toMatchObject({ roomLabel: "Main Room", webinarId: "123 456 7890", topic: "Test Webinar", unique: 2, countryCount: 2 });
+    expect(main.thresholds).toEqual([{ mins: 90, count: 1, pct: 50 }]);
+    expect(main.countries.map((c) => c.name).sort()).toEqual(["France", "Germany"]);
+    expect(chinese).toMatchObject({ roomLabel: "Chinese Room", unique: 1, countryCount: 1 });
+    expect(chinese.thresholds).toEqual([{ mins: 90, count: 0, pct: 0 }]);
+    expect(chinese.countries).toEqual([{ name: "Spain", count: 1, pct: 100 }]);
+    // The combined report is unchanged.
+    expect(topLine.unique).toBe(3);
+  });
+});

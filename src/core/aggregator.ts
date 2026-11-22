@@ -3,6 +3,7 @@ import type {
   AggregateStats,
   ProcessedDay,
   RoomStatRow,
+  RoomBreakdownStat,
   CountryStat,
   ThresholdStat,
   PerDayStat,
@@ -90,6 +91,19 @@ function buildHistogram(rows: AttendeeRow[]) {
   return buckets;
 }
 
+function thresholdStatsFor(rows: AttendeeRow[], thresholds: number[]): ThresholdStat[] {
+  return thresholds
+    .map((mins) => {
+      const count = rows.filter((r) => r.durationMinutes >= mins).length;
+      return {
+        mins,
+        count,
+        pct: rows.length ? round1((count / rows.length) * 100) : 0,
+      };
+    })
+    .sort((a, b) => a.mins - b.mins);
+}
+
 export function aggregate(input: AggregateInput): AggregateStats {
   const numDays = input.days.length;
   const allSources = input.days.flatMap((d) => d.sources);
@@ -126,16 +140,27 @@ export function aggregate(input: AggregateInput): AggregateStats {
 
   const countries = countryCountsFrom(combined);
 
-  const thresholds: ThresholdStat[] = input.thresholds
-    .map((mins) => {
-      const count = combined.filter((r) => r.durationMinutes >= mins).length;
-      return {
-        mins,
-        count,
-        pct: combined.length ? round1((count / combined.length) * 100) : 0,
-      };
-    })
-    .sort((a, b) => a.mins - b.mins);
+  const thresholds = thresholdStatsFor(combined, input.thresholds);
+
+  // Per-room view: only worth showing when several files are combined.
+  const perRoom: RoomBreakdownStat[] | undefined =
+    allSources.length > 1
+      ? input.days.flatMap((d) =>
+          d.sources.map((s) => {
+            const roomCountries = countryCountsFrom(s.attendees);
+            return {
+              dayLabel: extractFullDate(s.meta.actualStartTime),
+              roomLabel: s.roomLabel,
+              webinarId: s.meta.webinarId,
+              topic: s.meta.topic,
+              unique: s.attendees.length,
+              countryCount: roomCountries.length,
+              thresholds: thresholdStatsFor(s.attendees, input.thresholds),
+              countries: roomCountries,
+            };
+          }),
+        )
+      : undefined;
 
   const perDay: PerDayStat[] | undefined =
     numDays > 1
@@ -161,6 +186,7 @@ export function aggregate(input: AggregateInput): AggregateStats {
     countries,
     thresholds,
     perDay,
+    perRoom,
     histogram: buildHistogram(combined),
     retention: buildRetention(combined),
     peak: buildPeak(combined),

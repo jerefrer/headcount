@@ -127,6 +127,9 @@ export const strings = {
       peak: "Peak concurrent viewers",
       peakAt: "at %time",
       rooms: "Room statistics",
+      perRoom: "Per-room breakdown",
+      roomUnique: "Unique in room",
+      roomCountries: "Countries",
     },
   },
 } as const;

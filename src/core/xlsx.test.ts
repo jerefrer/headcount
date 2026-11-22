@@ -112,4 +112,27 @@ describe("buildXlsx", () => {
     const wb = XLSX.read(new Uint8Array(await buildXlsx(stats).arrayBuffer()), { type: "array" });
     expect(totalOf(wb, "Users by country — ≥ 90 min")).toBe(totalOf(wb, "Users by country"));
   });
+
+  it("adds one sheet per room, after the existing ones, when several files are combined", async () => {
+    const stats = aggFor([[DAY1_MAIN_CSV, DAY2_MAIN_CSV]]);
+    const wb = XLSX.read(new Uint8Array(await buildXlsx(stats).arrayBuffer()), { type: "array" });
+    // Both rooms share a webinar ID, so the second sheet name gets a suffix.
+    expect(wb.SheetNames).toEqual([
+      "Summary", "Countries", "Users by country", "Users by country — ≥ 90 min",
+      "Room — 123 456 7890", "Room — 123 456 7890 (2)",
+    ]);
+    expect(totalOf(wb, "Room — 123 456 7890")).toBe(2);
+    expect(totalOf(wb, "Room — 123 456 7890 (2)")).toBe(1);
+  });
+
+  it("keeps room sheet names within Excel's 31-character limit and unique", async () => {
+    const stats = aggFor([[DAY1_MAIN_CSV, DAY2_MAIN_CSV]]);
+    const long = "9".repeat(40);
+    stats.perRoom!.forEach((r) => { r.webinarId = long; });
+    const wb = XLSX.read(new Uint8Array(await buildXlsx(stats).arrayBuffer()), { type: "array" });
+    const rooms = wb.SheetNames.filter((n) => n.startsWith("Room"));
+    expect(rooms).toHaveLength(2);
+    expect(new Set(rooms).size).toBe(2);
+    for (const n of rooms) expect(n.length).toBeLessThanOrEqual(31);
+  });
 });

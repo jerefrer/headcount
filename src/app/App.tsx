@@ -51,6 +51,16 @@ function statsFromShared(s: ShareableReport): AggregateStats {
     histogram: s.histogram,
     retention: s.retention,
     peak: s.peak,
+    perRoom: s.perRoom?.map((r) => ({
+      dayLabel: "",
+      roomLabel: r.label,
+      webinarId: r.webinarId,
+      topic: "",
+      unique: r.unique,
+      countryCount: r.countryCount,
+      thresholds: r.thresholds,
+      countries: r.countries,
+    })),
   };
 }
 

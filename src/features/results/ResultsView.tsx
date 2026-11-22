@@ -10,6 +10,7 @@ import { EngagementHistogram } from "./EngagementHistogram";
 import { RetentionCurve } from "./RetentionCurve";
 import { PeakConcurrentBadge } from "./PeakConcurrentBadge";
 import { RoomStatsTable } from "./RoomStatsTable";
+import { RoomBreakdown } from "./RoomBreakdown";
 
 interface Props {
   stats: AggregateStats;
@@ -68,6 +69,12 @@ export function ResultsView({ stats, readOnly, onStartOver, onDownload, onShare 
       <section className="mb-2">
         <RoomStatsTable rooms={stats.rooms} />
       </section>
+
+      {stats.perRoom && stats.perRoom.length > 1 && (
+        <section className="mt-6">
+          <RoomBreakdown rooms={stats.perRoom} />
+        </section>
+      )}
 
       <footer className="mt-8 flex justify-center">
         {readOnly ? (

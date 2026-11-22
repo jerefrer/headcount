@@ -58,6 +58,14 @@ export function toShareable(stats: AggregateStats): ShareableReport {
     histogram: stats.histogram,
     retention: stats.retention,
     peak: stats.peak,
+    perRoom: stats.perRoom?.map((r) => ({
+      label: r.roomLabel,
+      webinarId: r.webinarId,
+      unique: r.unique,
+      countryCount: r.countryCount,
+      thresholds: r.thresholds,
+      countries: r.countries,
+    })),
   };
 }
 

@@ -12,6 +12,8 @@ export type {
   RetentionPoint,
   PerDayStat,
   RoomStatRow,
+  RoomBreakdownStat,
+  ShareableRoom,
   AggregateStats,
   ShareableReport,
 } from "@/core/types";

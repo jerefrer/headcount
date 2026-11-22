@@ -92,6 +92,18 @@ export interface RoomStatRow {
   durationMinutesZoom: string;// raw from meta
 }
 
+/** Aggregates for one room (one source file), shown beside the combined report. */
+export interface RoomBreakdownStat {
+  dayLabel: string;           // full date "26/05/2026"
+  roomLabel: string;
+  webinarId: string;
+  topic: string;              // webinar topic from the CSV; "" when unknown
+  unique: number;             // unique attendees in this room
+  countryCount: number;
+  thresholds: ThresholdStat[];
+  countries: CountryStat[];
+}
+
 export interface AggregateStats {
   title: string;
   generatedAt: string;                  // ISO date of report build (now)
@@ -107,6 +119,7 @@ export interface AggregateStats {
   countries: CountryStat[];
   thresholds: ThresholdStat[];
   perDay?: PerDayStat[];                // only when more than one day
+  perRoom?: RoomBreakdownStat[];        // only when more than one room (file) is combined
   histogram: HistogramBucket[];
   retention?: RetentionPoint[];
   peak?: { count: number; at: string }; // "HH:MM" 24-hour
@@ -129,4 +142,15 @@ export interface ShareableReport {
   histogram: HistogramBucket[];
   retention?: RetentionPoint[];
   peak?: AggregateStats["peak"];
+  /** Per-room aggregates (counts only — no topic, names or e-mails). */
+  perRoom?: ShareableRoom[];
+}
+
+export interface ShareableRoom {
+  label: string;
+  webinarId: string;
+  unique: number;
+  countryCount: number;
+  thresholds: ThresholdStat[];
+  countries: CountryStat[];
 }

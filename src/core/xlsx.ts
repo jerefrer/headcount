@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx-js-style";
-import type { AggregateStats, AttendeeRow, CountryStat } from "./types";
+import type { AggregateStats, AttendeeRow, CountryStat, RoomBreakdownStat } from "./types";
 import { countriesFilteredBy } from "./aggregator";
 
 const XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -388,11 +388,100 @@ function buildUbC(
   return ws;
 }
 
+// ─── Per-room sheets ──────────────────────────────────────────────────────
+
+const SHEET_NAME_MAX = 31; // Excel's hard limit
+
+/** "Room — <webinar id>", cut to Excel's limit, stripped of forbidden characters
+ *  and made unique (case-insensitively) with a " (n)" suffix. */
+function roomSheetNames(rooms: RoomBreakdownStat[]): string[] {
+  const used = new Set<string>();
+  return rooms.map((r) => {
+    const base = `Room — ${r.webinarId || r.roomLabel}`.replace(/[\\/?*[\]:]/g, "-");
+    let name = base.slice(0, SHEET_NAME_MAX);
+    for (let n = 2; used.has(name.toLowerCase()); n++) {
+      const suffix = ` (${n})`;
+      name = base.slice(0, SHEET_NAME_MAX - suffix.length) + suffix;
+    }
+    used.add(name.toLowerCase());
+    return name;
+  });
+}
+
+function buildRoom(stats: AggregateStats, room: RoomBreakdownStat): XLSX.WorkSheet {
+  const ws: XLSX.WorkSheet = {};
+  const NCOLS = 4;
+  const heights = new Map<number, number>();
+  const merges: XLSX.Range[] = [];
+  let r = 0;
+
+  const title = `${room.roomLabel} — ${stats.title}`;
+  setCell(ws, r, 0, title, styleTitle());
+  fillMergeRange(ws, r, 0, NCOLS - 1, styleTitle());
+  merges.push({ s: { r, c: 0 }, e: { r: r + 2, c: NCOLS - 1 } });
+  for (let band = r + 1; band <= r + 2; band++) {
+    setCell(ws, band, 0, "", styleTitle());
+    fillMergeRange(ws, band, 0, NCOLS - 1, styleTitle());
+  }
+  heights.set(r, Math.max(50, Math.ceil(title.length / (NCOLS * 12)) * 30));
+  heights.set(r + 1, 8);
+  heights.set(r + 2, 8);
+  r += 3;
+
+  // Room details and KPIs as label / value pairs.
+  const kpis: [string, string | number][] = [
+    ["Topic", room.topic],
+    ["Webinar ID", room.webinarId],
+    ["Day", room.dayLabel],
+    ["Unique attendees", room.unique],
+    ["Countries", room.countryCount],
+    ...room.thresholds.map((t): [string, string] => [`Attendees ≥ ${t.mins} min`, `${t.count} (${t.pct}%)`]),
+  ];
+  for (const [label, value] of kpis) {
+    setCell(ws, r, 0, label, styleLabel());
+    merges.push({ s: { r, c: 0 }, e: { r, c: 1 } });
+    setCell(ws, r, 1, "", styleLabel());
+    setCell(ws, r, 2, value, styleValue());
+    merges.push({ s: { r, c: 2 }, e: { r, c: NCOLS - 1 } });
+    heights.set(r, 22);
+    r++;
+  }
+  heights.set(r, 12);
+  r++;
+
+  ["No.", "Countries", "Users", "%"].forEach((h, c) => setCell(ws, r, c, h, styleTableHeader()));
+  heights.set(r, 32);
+  r++;
+
+  room.countries.forEach((c, i) => {
+    setCell(ws, r, 0, i + 1, styleDataCell(i, { numeric: true }));
+    setCell(ws, r, 1, c.name, styleDataCell(i));
+    setCell(ws, r, 2, c.count, styleDataCell(i, { numeric: true, bold: true }));
+    setCell(ws, r, 3, c.pct, styleDataCell(i, { numeric: true }));
+    heights.set(r, 22);
+    r++;
+  });
+
+  setCell(ws, r, 0, "", styleTotal());
+  setCell(ws, r, 1, "Total", styleTotal());
+  setCell(ws, r, 2, room.countries.reduce((s, c) => s + c.count, 0), styleTotal({ numeric: true }));
+  setCell(ws, r, 3, 100, styleTotal({ numeric: true }));
+  heights.set(r, 30);
+  r++;
+
+  ws["!merges"] = merges;
+  setRange(ws, r - 1, NCOLS - 1);
+  setColWidths(ws, [14, 40, 14, 12]);
+  setRowHeights(ws, heights, 18, r);
+  return ws;
+}
+
 // ─── Public entry ─────────────────────────────────────────────────────────
 
 /**
  * Build the formatted XLSX as a Blob ready to download. Sheet layout:
  * Summary / Countries / Users by country / Users by country — ≥ Nmin,
+ * then one "Room — <webinar id>" sheet per room when several files are combined,
  * with rich Zoom-blue styling (banner titles, colored headers, alternating
  * rows, generous row heights). Uses `xlsx-js-style` so styles persist.
  */
@@ -406,6 +495,10 @@ export function buildXlsx(stats: AggregateStats, options: XlsxOptions = {}): Blo
       ? countriesFilteredBy(options.combinedAttendees, t.mins)
       : stats.countries;
     XLSX.utils.book_append_sheet(wb, buildUbC(stats, filtered, t.mins), `Users by country — ≥ ${t.mins} min`);
+  }
+  if (stats.perRoom) {
+    const names = roomSheetNames(stats.perRoom);
+    stats.perRoom.forEach((room, i) => XLSX.utils.book_append_sheet(wb, buildRoom(stats, room), names[i]));
   }
   const ab = XLSX.write(wb, { type: "array", bookType: "xlsx" }) as ArrayBuffer;
   return new Blob([ab], { type: XLSX_MIME });
