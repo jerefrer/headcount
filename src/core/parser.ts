@@ -1,11 +1,7 @@
 import Papa from "papaparse";
 import type { AttendeeRow, ParsedMeta, ParsedReport } from "./types";
-
-const SECTION_MARKERS = new Set([
-  "Host Details",
-  "Panelist Details",
-  "Attendee Details",
-]);
+import { detectLocale, normalizeDateTime, type SectionKind, type ZoomLocale } from "./locales";
+import { normalizeCountry } from "./countries";
 
 const EMPTY_META: ParsedMeta = {
   topic: "",
@@ -17,20 +13,22 @@ const EMPTY_META: ParsedMeta = {
   generatedTime: "",
 };
 
-function rowToAttendee(row: string[], headers: string[]): AttendeeRow {
+function rowToAttendee(row: string[], headers: string[], loc: ZoomLocale): AttendeeRow {
   const get = (key: string): string => {
     const i = headers.indexOf(key);
     return i >= 0 && i < row.length ? row[i].trim() : "";
   };
-  const dur = Number(get("Time in Session (minutes)"));
+  const c = loc.columns;
+  const dur = Number(get(c.duration));
+  const guest = get(c.isGuest);
   return {
-    name: get("User Name (Original Name)"),
-    email: get("Email"),
-    joinTime: get("Join Time"),
-    leaveTime: get("Leave Time"),
+    name: get(c.name),
+    email: get(c.email),
+    joinTime: normalizeDateTime(get(c.joinTime), loc.dateOrder),
+    leaveTime: normalizeDateTime(get(c.leaveTime), loc.dateOrder),
     durationMinutes: Number.isFinite(dur) ? dur : 0,
-    isGuest: get("Is Guest"),
-    country: get("Country/Region Name"),
+    isGuest: guest === loc.yes ? "Yes" : guest === loc.no ? "No" : guest,
+    country: normalizeCountry(get(c.country), loc.id),
   };
 }
 
@@ -50,7 +48,15 @@ export function parseZoomCsv(text: string): ParsedReport {
   const panelists: AttendeeRow[] = [];
   const attendees: AttendeeRow[] = [];
 
-  let currentSection: "Host Details" | "Panelist Details" | "Attendee Details" | null = null;
+  const loc = detectLocale(rows);
+  const sectionByTitle = new Map<string, SectionKind>(
+    (Object.entries(loc.sections) as [SectionKind, string][]).map(([kind, title]) => [title, kind]),
+  );
+  const metaByHeader = new Map<string, keyof ParsedMeta>(
+    (Object.entries(loc.meta) as [keyof ParsedMeta, string][]).map(([field, header]) => [header, field]),
+  );
+
+  let currentSection: SectionKind | null = null;
   let currentHeaders: string[] | null = null;
 
   for (let i = 0; i < rows.length; i++) {
@@ -58,14 +64,14 @@ export function parseZoomCsv(text: string): ParsedReport {
     if (isEmptyRow(row)) continue;
     const first = row[0] ?? "";
 
-    if (first === "Attendee Report") continue;
+    if (first === loc.reportTitle) continue;
 
-    if (first === "Report generated time") {
-      meta.generatedTime = row[1] ?? "";
+    if (first === loc.generatedTime) {
+      meta.generatedTime = normalizeDateTime(row[1] ?? "", loc.dateOrder);
       continue;
     }
 
-    if (first === "Topic") {
+    if (first === loc.meta.topic) {
       const webinarCols = row;
       let j = i + 1;
       while (j < rows.length && isEmptyRow(rows[j])) j++;
@@ -74,20 +80,18 @@ export function parseZoomCsv(text: string): ParsedReport {
         for (let c = 0; c < webinarCols.length; c++) {
           const col = webinarCols[c];
           const value = valuesRow[c] ?? "";
-          if (col === "Topic") meta.topic = value;
-          else if (col === "Webinar ID") meta.webinarId = value;
-          else if (col === "Actual Start Time") meta.actualStartTime = value;
-          else if (col === "Actual Duration (minutes)") meta.actualDurationMinutes = value;
-          else if (col === "Total Users") meta.totalUsers = value;
-          else if (col === "Unique Viewers") meta.uniqueViewers = value;
+          const field = metaByHeader.get(col);
+          if (!field) continue;
+          meta[field] = field === "actualStartTime" ? normalizeDateTime(value, loc.dateOrder) : value;
         }
         i = j;
       }
       continue;
     }
 
-    if (SECTION_MARKERS.has(first)) {
-      currentSection = first as unknown as typeof currentSection;
+    const section = sectionByTitle.get(first);
+    if (section) {
+      currentSection = section;
       currentHeaders = null;
       let j = i + 1;
       while (j < rows.length && isEmptyRow(rows[j])) j++;
@@ -99,9 +103,9 @@ export function parseZoomCsv(text: string): ParsedReport {
     }
 
     if (currentSection && currentHeaders) {
-      const att = rowToAttendee(row, currentHeaders);
-      if (currentSection === "Host Details") hosts.push(att);
-      else if (currentSection === "Panelist Details") panelists.push(att);
+      const att = rowToAttendee(row, currentHeaders, loc);
+      if (currentSection === "host") hosts.push(att);
+      else if (currentSection === "panelist") panelists.push(att);
       else attendees.push(att);
     }
   }
