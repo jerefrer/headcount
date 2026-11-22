@@ -61,6 +61,16 @@ describe("buildXlsx", () => {
     expect(headerCells).toContain("Total");
   });
 
+  it("declares a workbook view, so Excel for Windows shows the sheet tabs", async () => {
+    const buf = await buildXlsx(aggFor([[DAY1_MAIN_CSV]])).arrayBuffer();
+    // The raw part: XLSX.read fills in a default view when the file has none.
+    const zip = XLSX.CFB.read(new Uint8Array(buf), { type: "array" });
+    const entry = XLSX.CFB.find(zip, "/xl/workbook.xml");
+    const xml = new TextDecoder().decode(entry?.content as Uint8Array);
+    expect(xml).toContain("<bookViews>");
+    expect(xml).toContain("<workbookView");
+  });
+
   it("blob has the correct XLSX MIME type", () => {
     const stats = aggFor([[DAY1_MAIN_CSV]]);
     const blob = buildXlsx(stats);

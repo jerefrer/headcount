@@ -501,5 +501,25 @@ export function buildXlsx(stats: AggregateStats, options: XlsxOptions = {}): Blo
     stats.perRoom.forEach((room, i) => XLSX.utils.book_append_sheet(wb, buildRoom(stats, room), names[i]));
   }
   const ab = XLSX.write(wb, { type: "array", bookType: "xlsx" }) as ArrayBuffer;
-  return new Blob([ab], { type: XLSX_MIME });
+  return new Blob([withWorkbookView(ab)], { type: XLSX_MIME });
+}
+
+// Excel for Windows opened a report with no sheet tabs at all, so only the first
+// sheet could be seen (2026-11-22, a Ukrainian Excel in Protected View). The file
+// had no <bookViews>: SheetJS writes one only when the first sheet is hidden. So
+// the view is added to the written file, with the tabs and scroll bars explicit.
+const WORKBOOK_VIEW =
+  '<bookViews><workbookView xWindow="0" yWindow="0" windowWidth="28800" windowHeight="15000" ' +
+  'tabRatio="600" showSheetTabs="1" showHorizontalScroll="1" showVerticalScroll="1" ' +
+  'activeTab="0" firstSheet="0"/></bookViews>';
+
+function withWorkbookView(ab: ArrayBuffer): Uint8Array<ArrayBuffer> {
+  const zip = XLSX.CFB.read(new Uint8Array(ab), { type: "array" });
+  const entry = XLSX.CFB.find(zip, "/xl/workbook.xml");
+  if (!entry) return new Uint8Array(ab);
+  const xml = new TextDecoder().decode(entry.content as Uint8Array);
+  if (xml.includes("<bookViews") || !xml.includes("<sheets>")) return new Uint8Array(ab);
+  entry.content = new TextEncoder().encode(xml.replace("<sheets>", `${WORKBOOK_VIEW}<sheets>`));
+  // CFB.write returns a plain Uint8Array over an ArrayBuffer; its typings only say ArrayBufferLike.
+  return XLSX.CFB.write(zip, { fileType: "zip", type: "array", compression: true }) as Uint8Array<ArrayBuffer>;
 }
